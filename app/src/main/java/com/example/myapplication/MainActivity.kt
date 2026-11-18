@@ -12,9 +12,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -77,10 +80,21 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun EventList(events: List<Event>, modifier: Modifier = Modifier) {
+        Scaffold(
+            modifier = modifier,
+            topBar = {
+                TopAppBar(
+                    title = { Text("Campus") }
+                )
+            }
+        ) { innerPadding ->
         LazyColumn(
-            modifier = modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -89,15 +103,22 @@ class MainActivity : ComponentActivity() {
                 EventCard(event = event)
             }
         }
+            }
     }
 
     @Composable
     fun EventCard(event: Event) {
+        val isSoldOut=event.capacity ==0
         Card {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier
+                .padding(16.dp)) {
                 Text(event.title)
                 Text(event.category)
                 Text(event.location ?: "Lieu à confirmer")
+                Button(
+                    onClick = { },
+                    enabled = !isSoldOut
+                    ) {if (isSoldOut) Text("Complet") else Text("Réserver") }
             }
         }
     }
