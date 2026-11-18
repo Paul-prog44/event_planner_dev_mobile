@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -109,14 +110,21 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun EventCard(event: Event) {
         val isSoldOut=event.capacity ==0
-        Card {
+        Card(
+            modifier = Modifier
+                .clickable {
+                    Log.d(TAG,"Click sur la carte de ${event.title}")
+            }
+        ){
             Column(modifier = Modifier
                 .padding(16.dp)) {
                 Text(event.title)
                 Text(event.category)
                 Text(event.location ?: "Lieu à confirmer")
                 Button(
-                    onClick = { },
+                    onClick = {
+                        Log.d(TAG, "Réservation tentée pour l'event: ${event.title}")
+                    },
                     enabled = !isSoldOut
                     ) {if (isSoldOut) Text("Complet") else Text("Réserver") }
             }
