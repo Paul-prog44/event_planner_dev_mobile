@@ -10,18 +10,23 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 private const val TAG = "Campus"
@@ -37,15 +42,15 @@ class MainActivity : ComponentActivity() {
         ),
         Event(
             id = 2,
-            title = "Atelier Jetpack Compose",
-            category = "Formation",
-            location = "Salle 204",
+            title = "Exposition Gustave Klint",
+            category = "Culture",
+            location = "Musée du Belvédère, Vienne",
             capacity = 25
         ),
         Event(
             id = 3,
-            title = "Réunion d'équipe secrète",
-            category = "Interne",
+            title = "Concert de musique de chambre",
+            category = "Musique",
             location = null,
             capacity = 10
         ),
@@ -58,12 +63,21 @@ class MainActivity : ComponentActivity() {
         ),
         Event(
             id = 5,
-            title = "Hackathon Mobile",
-            category = "Compétition",
+            title = "Marathon",
+            category = "Sport",
             location = "Lab Innovation",
             capacity = 50
+        ),
+        Event(
+            id = 6,
+            title="Balade dans le Morvan",
+            category = "Nature",
+            location = "Parc régional naturel du Morvan",
+            capacity =10
         )
     )
+
+    val categories = listOf("Technologie","Sport","Musique","Culture", "Nature", "Social")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.w(TAG, "Evenement à afficher")
@@ -92,19 +106,45 @@ class MainActivity : ComponentActivity() {
                 )
             }
         ) { innerPadding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Correction ici : it.id au lieu de id.id
-            items(events, key = { it.id }) { event ->
-                EventCard(event = event)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(categories) { category ->
+                        FilterChip(
+                            selected = false,
+                            onClick = {},
+                            label = { Text(category) }
+                        )
+
+                    }
+                }
+
+                LazyColumn(
+                    modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 4.dp,
+                        bottom = 16.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    // Correction ici : it.id au lieu de id.id
+                    items(events, key = { it.id }) { event ->
+                        EventCard(event = event)
+                    }
+                }
             }
         }
-            }
     }
 
     @Composable
@@ -113,12 +153,12 @@ class MainActivity : ComponentActivity() {
         Card(
             modifier = Modifier
                 .clickable {
-                    Log.d(TAG,"Click sur la carte de ${event.title}")
+                    Log.d(TAG,"Click sur la carte de ${event.toString()}")
             }
         ){
             Column(modifier = Modifier
-                .padding(16.dp)) {
-                Text(event.title)
+                .padding(16.dp )) {
+                Text(text = event.title, style = MaterialTheme.typography.titleLarge)
                 Text(event.category)
                 Text(event.location ?: "Lieu à confirmer")
                 Button(
