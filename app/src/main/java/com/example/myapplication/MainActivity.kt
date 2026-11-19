@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
@@ -109,10 +112,24 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    fun SearchField(
+        state: TextFieldState,
+        modifier: Modifier = Modifier
+    ) {
+        TextField(
+            state = state,
+            label = { Text("Rechercher") })
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun EventList(events: List<Event>, modifier: Modifier = Modifier) {
         var favoritesIds by rememberSaveable { mutableStateOf(listOf<Int>())}
+        val queryState = rememberTextFieldState()
+        val visibleEvents = events.filter {
+            it.title.contains(queryState.text, ignoreCase = true)
+        }
 
         Scaffold(
             modifier = modifier,
@@ -141,6 +158,7 @@ class MainActivity : ComponentActivity() {
 
                     }
                 }
+                SearchField(state = queryState)
 
                 LazyColumn(
                     modifier = Modifier
@@ -154,7 +172,7 @@ class MainActivity : ComponentActivity() {
                     ),
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    items(events, key = { it.id }) { event ->
+                    items(visibleEvents, key = { it.id }) { event ->
                         val isFavorite = event.id in favoritesIds
                         EventCard(event = event, isFavorite, onFavoriteClick = {
                             favoritesIds = if (isFavorite) favoritesIds - event.id
