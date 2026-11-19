@@ -38,8 +38,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.*
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -115,12 +117,13 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun SearchField(
         state: TextFieldState,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier.padding(10.dp)
     ) {
         TextField(
             state = state,
-            label = { Text("Rechercher") })
-    }
+            label = { Text("Rechercher") },
+            modifier= modifier
+        )}
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -158,7 +161,13 @@ class MainActivity : ComponentActivity() {
 
                     }
                 }
-                SearchField(state = queryState)
+                SearchField(
+                    state = queryState,
+                    modifier = Modifier
+                        .fillMaxWidth(0.85f)
+                        .align(Alignment.CenterHorizontally)
+                        .padding(kvertical = 8.dp)
+                    )
 
                 LazyColumn(
                     modifier = Modifier
