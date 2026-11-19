@@ -1,3 +1,16 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Event planner</string>
+    <string name="app_title">Campus</string>
+    <string name="location_tbd">Lieu à confirmer</string>
+    <string name="event_sold_out">Événement complet</string>
+    <string name="reserve_button">Réserver</string>
+    <string name="sold_out_button">Complet</string>
+    <string name="event_category">Catégorie : %1$s</string>
+    <string name="event_location">Lieu : %1$s</string>
+
+    <plurals name="remaining_spots">
+        <item quantity="zero">Aucune place disponible</item>
+        <item quantity="one">%1$d place disponible</item>
+        <item quantity="other">%1$d places disponibles</item>
+    </plurals>
 </resources>
